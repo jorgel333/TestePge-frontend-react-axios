@@ -1,0 +1,35 @@
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+
+  th {
+    background-color: transparent; 
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    background-color: transparent; 
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #fff;
+    color: #0e1217;
+    border:  1px solid #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .btn:hover {
+    color: #fff;
+    background-color: #0e1217;
+  }

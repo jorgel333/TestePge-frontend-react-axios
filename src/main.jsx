@@ -7,6 +7,10 @@ import './index.css'
 //páginas
 import Home from './routes/Home.jsx'
 import NewPost from './routes/NewPost.jsx'
+import ClientesAdvogados from './routes/ClientesAdvogados.jsx'
+import Clientes from './routes/Clientes.jsx'
+import Advogados from './routes/Advogados.jsx'
+import ProcessoDetalhes from './routes/ProcessoDetalhes.jsx'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +24,23 @@ const router = createBrowserRouter([
         path: "/new",
         element: <NewPost />,
       },
+      {
+        path: "/clientesadvogados",
+        element: <ClientesAdvogados />,
+      },
+      {
+        path: "/clientes",
+        element: <Clientes />
+      },
+      {
+        path: "/advogados",
+        element: <Advogados />
+      },
+      {
+        path: "/processodetail/:id",
+        element: <ProcessoDetalhes />
+      }
+      
     ],
   },
 ]);
