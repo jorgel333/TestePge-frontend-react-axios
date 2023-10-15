@@ -34,7 +34,7 @@ const Home = () => {
         <h1>Últimos Processos Judiciais</h1>
         {processos.length === 0 ? <p>Carregando...</p> : (
           processos.map((processo)=> (
-            <div className='processo' key={processo.numeroprocesso}>
+            <div className='processo' key={processo.numeroProcesso}>
               <h2>{processo.tema}</h2>
               <p>{processo.descricao}</p>
               <Link to = {`/processodetail/${processo.numeroProcesso}`} className='btn'>

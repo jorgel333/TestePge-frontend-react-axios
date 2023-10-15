@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <Advogados />
       },
       {
-        path: "/processodetail/:id",
+        path: "/processodetail/:numeroProcesso",
         element: <ProcessoDetalhes />
       }
       

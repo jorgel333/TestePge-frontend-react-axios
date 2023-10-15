@@ -1,16 +1,18 @@
-import blogFetch from '../axios/config'
-import { useState, useEffect } from 'react'
+import blogFetch from '../axios/config';
+import { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 
-import React from 'react'
+import React from 'react';
 
-function ProcessoDetalhes(props) {
+function ProcessoDetalhes() {
 
     const [processo, setProcesso] = useState([]);
-    const id = props.match.params.id
+    const {numeroProcesso} = useParams();
     const getProcesso = async () => {
     try {
+      console.log(numeroProcesso)
       const response = await blogFetch.get(
-        `/ProcessosJudiciais/${id}`);
+        `/ProcessosJudiciais/${numeroProcesso}`);
       
         const data = response.data;
       console.log(data)
@@ -29,39 +31,33 @@ function ProcessoDetalhes(props) {
 
   return (
     <div className='home'>
-    <h1>Processos Judicial</h1>
-    {processo.length === 0 ? <p>Carregando...</p> : (
-      <div className='processos-list'>
-        {processo.map((pro) => (
-          <div className='processo' key={pro.numeroProcesso}>
-            <h2>Tema: {pro.tema}</h2>
-            <p>Número do Processo: {pro.numeroProcesso}</p>
-            <p>Descrição: {pro.des}</p>
-            <p>Valor da Causa: {pro.valorCausa}</p>
-            <p>Advogado Responsável: {pro.advogadoResponsavel}</p>
-            <p>Parte: {pro.parte}</p>
-            <div>
-              <strong>Documentos:</strong>
-              <ul>
-                {pro.documentos.map((documento, index) => (
+      <h1>Processo Judicial</h1>
+      {Object.keys(processo).length === 0 ? (
+        <p>Carregando...</p>
+      ) : (
+        <div className='processo'>
+          <h2>Tema: {processo.tema}</h2>
+          <p>Número do Processo: {processo.numeroProcesso}</p>
+          <p>Descrição: {processo.descricao}</p>
+          <p>Valor da Causa: {processo.valorCausa}</p>
+          <p>Advogado Responsável: {processo.advogadoResponsavel}</p>
+          <p>Parte: {processo.parte}</p>
+          <div>
+            <strong>Documentos:</strong>
+            <ul>
+              {Array.isArray(processo.documentos) ? (
+                processo.documentos.map((documento, index) => (
                   <li key={index}>{documento}</li>
-                ))}
-              </ul>
-            </div>
+                ))
+              ) : (
+                <li>Nenhum documento disponível</li>
+              )}
+            </ul>
           </div>
-        ))}
-      </div>
-    )}
-  </div>
-  
-  
-  
-  
-  
-  
-    
-
-
+          
+        </div>
+      )}
+    </div>
   )
 }
 
