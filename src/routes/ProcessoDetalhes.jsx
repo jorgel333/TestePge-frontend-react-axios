@@ -54,7 +54,6 @@ function ProcessoDetalhes() {
               )}
             </ul>
           </div>
-          
         </div>
       )}
     </div>
