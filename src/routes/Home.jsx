@@ -28,7 +28,7 @@ const Home = () => {
   useEffect(() =>{
     getProcessos();
   }, []);
-
+  
   return (
     <div className='home'>
         <h1>Últimos Processos Judiciais</h1>

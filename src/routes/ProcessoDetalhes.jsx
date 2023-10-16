@@ -1,33 +1,34 @@
 import blogFetch from '../axios/config';
 import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
-
+import { useParams } from 'react-router-dom';
 import React from 'react';
 
 function ProcessoDetalhes() {
+  const [processo, setProcesso] = useState([]);
+  const { numeroProcesso } = useParams();
 
-    const [processo, setProcesso] = useState([]);
-    const {numeroProcesso} = useParams();
-    const getProcesso = async () => {
+  const getProcesso = async () => {
     try {
-      console.log(numeroProcesso)
-      const response = await blogFetch.get(
-        `/ProcessosJudiciais/${numeroProcesso}`);
-      
-        const data = response.data;
-      console.log(data)
-        setProcesso(data);
-
+      const response = await blogFetch.get(`/ProcessosJudiciais/${numeroProcesso}`);
+      const data = response.data;
+      setProcesso(data);
     } catch (error) {
-      
       console.log(error);
-      
     }
   };
 
-  useEffect(() =>{
+  useEffect(() => {
     getProcesso();
   }, []);
+
+  const handleRemoveDocument = async (documentoId) => {
+    try {
+      // Implemente a lógica para remover o documento
+      // Isso pode envolver uma solicitação ao servidor
+    } catch (error) {
+      console.log(`Erro ao remover documento: ${error}`);
+    }
+  };
 
   return (
     <div className='home'>
@@ -47,7 +48,18 @@ function ProcessoDetalhes() {
             <ul>
               {Array.isArray(processo.documentos) ? (
                 processo.documentos.map((documento, index) => (
-                  <li key={index}>{documento}</li>
+                  <li key={index}>
+                    <a
+                      href={`https://localhost:7099/api/Documentos/${documento.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {documento.nomeDocumento}
+                    </a>
+                    <button onClick={() => handleRemoveDocument(documento.id)} className='btn'>
+                      Remover
+                    </button>
+                  </li>
                 ))
               ) : (
                 <li>Nenhum documento disponível</li>
@@ -57,7 +69,7 @@ function ProcessoDetalhes() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default ProcessoDetalhes
+export default ProcessoDetalhes;
