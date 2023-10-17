@@ -6,6 +6,7 @@ import React from 'react';
 function ProcessoDetalhes() {
   const [processo, setProcesso] = useState([]);
   const { numeroProcesso } = useParams();
+  const [novosDocumentos, setNovosDocumentos] = useState();
 
   const getProcesso = async () => {
     try {
@@ -23,12 +24,34 @@ function ProcessoDetalhes() {
 
   const handleRemoveDocument = async (documentoId) => {
     try {
-      // Implemente a lógica para remover o documento
-      // Isso pode envolver uma solicitação ao servidor
+      await blogFetch.delete(`/Documentos/${documentoId}`);
+      getProcesso();
     } catch (error) {
       console.log(`Erro ao remover documento: ${error}`);
     }
   };
+
+  const handleUploadNewDocuments = async () => {
+    if (!novosDocumentos || novosDocumentos.length === 0) {
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('numeroProcesso', numeroProcesso);
+  
+    Array.from(novosDocumentos).forEach((anexo) => {
+      formData.append('documentos', anexo);
+    });
+  
+    try {
+      await blogFetch.post('/Documentos', formData);
+      getProcesso(); 
+      setNovosDocumentos(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <div className='home'>
@@ -65,6 +88,18 @@ function ProcessoDetalhes() {
                 <li>Nenhum documento disponível</li>
               )}
             </ul>
+          </div>
+          <div>
+            <strong>Novos Documentos:</strong>
+            <input
+              type="file"
+              name="novosDocumentos"
+              multiple 
+              onChange={(e) => setNovosDocumentos(e.target.files)}
+            />
+            <button onClick={handleUploadNewDocuments} className='btn'>
+              Anexar
+            </button>
           </div>
         </div>
       )}

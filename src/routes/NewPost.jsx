@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import blogFetch from '../axios/config';
 import { useNavigate } from 'react-router-dom';
-import Select from 'react-select'; // Importe o componente Select
+import Select from 'react-select';
 
 import './NewPost.css';
 
 const NewPost = () => {
   const navigate = useNavigate();
 
-  const [tema, setTema] = useState();
-  const [valorCausa, setValorCausa] = useState();
-  const [descricao, setDescricao] = useState();
-  const [clienteId, setClienteId] = useState(); // Altere para null para lidar com pesquisa
-  const [advogadoId, setAdvogadoId] = useState(); // Altere para null para lidar com pesquisa
+  const [tema, setTema] = useState('');
+  const [valorCausa, setValorCausa] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [clienteId, setClienteId] = useState(null);
+  const [advogadoId, setAdvogadoId] = useState(null);
 
   const [advogados, setAdvogados] = useState([]);
   const [clientes, setClientes] = useState([]);
+
+  const [anexos, setAnexos] = useState([]); // Estado para a coleção de arquivos anexos
 
   const fetchData = async () => {
     try {
@@ -33,25 +35,60 @@ const NewPost = () => {
     fetchData();
   }, []);
 
-  const createPost = async (e) => {
-    e.preventDefault();
-
-    const post = {
+  const createProcessData = async () => {
+    const process = {
       tema,
       valorCausa,
       descricao,
-      clienteId: clienteId.value, // Acesse o valor selecionado
-      advogadoId: advogadoId.value, // Acesse o valor selecionado
+      clienteId: clienteId.value,
+      advogadoId: advogadoId.value,
     };
 
-    await blogFetch.post('/ProcessosJudiciais/criar-processo', post);
-    navigate('/');
+    try {
+      const response = await blogFetch.post('/ProcessosJudiciais/criar-processo', process);
+      const numeroProcesso = response.data.numeroProcesso; // Suponha que o servidor retorne o ID do processo
+      return numeroProcesso;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const uploadFiles = async (numeroProcesso) => {
+    if (!numeroProcesso || anexos.length === 0) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('numeroProcesso', numeroProcesso); 
+
+    // Anexe todos os arquivos à coleção de arquivos
+    Array.from(anexos).forEach((anexo) => {
+      formData.append('documentos', anexo);
+    });
+
+    try {
+      await blogFetch.post('/Documentos', formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCreateProcess = async (e) => {
+    e.preventDefault();
+
+    const numeroProcesso = await createProcessData();
+
+    if (numeroProcesso) {
+      uploadFiles(numeroProcesso); 
+      navigate('/');
+    }
   };
 
   return (
     <div className="novo-processo">
       <h2>Novo Processo</h2>
-      <form onSubmit={(e) => createPost(e)}>
+      <form onSubmit={(e) => handleCreateProcess(e)}>
         <div className="form-control">
           <label htmlFor="tema">Tema</label>
           <input
@@ -86,8 +123,8 @@ const NewPost = () => {
         <div className="form-control">
           <label htmlFor="advogadoId">Advogado</label>
           <Select
-            value={advogadoId} // Use o valor selecionado
-            onChange={(selectedOption) => setAdvogadoId(selectedOption)} // Atualize o estado
+            value={advogadoId} 
+            onChange={(selectedOption) => setAdvogadoId(selectedOption)} 
             options={advogados.map((advogado) => ({
               value: advogado.id,
               label: advogado.nome,
@@ -97,12 +134,21 @@ const NewPost = () => {
         <div className="form-control">
           <label htmlFor="clienteId">Parte</label>
           <Select
-            value={clienteId} // Use o valor selecionado
-            onChange={(selectedOption) => setClienteId(selectedOption)} // Atualize o estado
+            value={clienteId} 
+            onChange={(selectedOption) => setClienteId(selectedOption)} 
             options={clientes.map((cliente) => ({
               value: cliente.id,
               label: cliente.nome,
             }))}
+          />
+        </div>
+        <div className="form-control">
+          <label htmlFor="documentos">Anexar Arquivos</label>
+          <input
+            type="file"
+            name="documentos"
+            multiple 
+            onChange={(e) => setAnexos(e.target.files)}
           />
         </div>
         <input type="submit" value="Criar Processo" className="btn" />
