@@ -11,6 +11,8 @@ import ClientesAdvogados from './routes/ClientesAdvogados.jsx'
 import Clientes from './routes/Clientes.jsx'
 import Advogados from './routes/Advogados.jsx'
 import ProcessoDetalhes from './routes/ProcessoDetalhes.jsx'
+import DetalhesAdvogado from './routes/DetalhesAdvogado.jsx'
+import DetalhesCliente from './routes/DetalhesCliente.jsx'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: "/processodetail/:numeroProcesso",
         element: <ProcessoDetalhes />
+      },
+      {
+        path: "/clientedetail/:id",
+        element: <DetalhesCliente />
+      },
+      {
+        path: "/advogadodetail/:id",
+        element: <DetalhesAdvogado />
       }
       
     ],

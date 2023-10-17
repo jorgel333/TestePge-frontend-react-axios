@@ -43,7 +43,7 @@ function Advogados() {
             <tr key={advogado.id}>
               <td>{advogado.nome}</td>
               <td>
-                <Link to = {`/advogadoDetail/${advogado.id}`} className='btn'>
+                <Link to = {`/advogadodetail/${advogado.id}`} className='btn'>
                   Mais detalhes
                   </Link>
               </td>

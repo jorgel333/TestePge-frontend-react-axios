@@ -44,7 +44,7 @@ function Clientes() {
           <tr key={cliente.id}>
             <td>{cliente.nome}</td>
             <td>
-              <Link to = {`/clienteDetail/${cliente.id}`} className='btn'>
+              <Link to = {`/clientedetail/${cliente.id}`} className='btn'>
                 Mais detalhes
                 </Link>
             </td>
